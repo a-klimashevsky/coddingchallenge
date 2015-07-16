@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">ImageFeatcher</string>
+    <string name="app_name">Coding Challenge</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="server_endpoint">https://s3-us-west-2.amazonaws.com</string>
+    <string name="title_activity_large_portraint">LargePortraintActivity</string>
 </resources>

@@ -1,17 +1,52 @@
 package com.example.imagefeatcher;
 
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.imagefeatcher.adapter.CandidateAdapter;
+import com.example.imagefeatcher.loader.CandidateLoader;
+import com.example.imagefeatcher.web.Candidate;
 
-public class MainActivity extends ActionBarActivity {
+import java.util.List;
+
+
+public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks<List<Candidate>> {
+    private RecyclerView mRecyclerView;
+
+    private CandidateAdapter mAdapter;
+
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new CandidateAdapter();
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
+    }
+
+    private void loadData() {
+        if(getSupportLoaderManager().getLoader(0) == null){
+            getSupportLoaderManager().initLoader(0, null, this);
+        } else {
+            getSupportLoaderManager().restartLoader(0, null, this);
+        }
     }
 
     @Override
@@ -34,5 +69,21 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public Loader<List<Candidate>> onCreateLoader(int id, Bundle args) {
+        return new CandidateLoader(this);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Candidate>> loader, List<Candidate> data) {
+        mAdapter.setData(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Candidate>> loader) {
+        mAdapter.setData(null);
     }
 }
